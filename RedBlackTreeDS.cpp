@@ -15,20 +15,20 @@ Red_Black_Tree::~Red_Black_Tree()
 {
     // empty destructor
 }
-void Red_Black_Tree::RBPrintNode(Node *p_Node)
+void Red_Black_Tree::RBTRBPrintNode(Node *p_Node)
 {
     if (p_Node != Nil)
     {
-        RBPrintNode(p_Node->left);
-        std::cout << p_Node->key << std::endl;
-        RBPrintNode(p_Node->right);
+        RBTRBPrintNode(p_Node->left);
+        std::cout << p_Node->rbt_currentTimeVirtual << std::endl;
+        RBTRBPrintNode(p_Node->right);
     }
 }
-Node *Red_Black_Tree::rootIs()
+Node *Red_Black_Tree::RBTrootIs()
 {
     return T;
 }
-void Red_Black_Tree::LeftRotation(Node *p_Node)
+void Red_Black_Tree::RBTLeftRotation(Node *p_Node)
 {
     // rotate the connection between z and z.right
     Node *y = p_Node->right;
@@ -54,7 +54,7 @@ void Red_Black_Tree::LeftRotation(Node *p_Node)
     y->left = p_Node;
     p_Node->parent = y;
 }
-void Red_Black_Tree::RightRotation(Node *p_Node)
+void Red_Black_Tree::RBTRightRotation(Node *p_Node)
 {
     // rotate the connection between z and z.left
     Node *y = p_Node->left;
@@ -80,7 +80,7 @@ void Red_Black_Tree::RightRotation(Node *p_Node)
     y->right = p_Node;
     p_Node->parent = y;
 }
-void Red_Black_Tree::FixInsertion(Node *p_Node)
+void Red_Black_Tree::RBTFixInsertion(Node *p_Node)
 {
     Node *tmp = p_Node;
     // prove that only the case of z and z.p are RED is violate in this case
@@ -107,13 +107,13 @@ void Red_Black_Tree::FixInsertion(Node *p_Node)
                 {
                     tmp = tmp->parent;
                     // Rotate two RED node => do not affect to any properties
-                    LeftRotation(tmp);
+                    RBTLeftRotation(tmp);
                 }
                 // change current node to BLACK as its chile is RED after rotate
                 tmp->parent->color = BLACK;
                 // change grandparent to RED and utilize Right rotate
                 tmp->parent->parent->color = RED;
-                RightRotation(tmp->parent->parent);
+                RBTRightRotation(tmp->parent->parent);
             }
         }
         else
@@ -136,13 +136,13 @@ void Red_Black_Tree::FixInsertion(Node *p_Node)
                 {
                     tmp = tmp->parent;
                     // Rotate two RED node => do not affect to any properties
-                    RightRotation(tmp);
+                    RBTRightRotation(tmp);
                 }
                 // change current node to BLACK as its chile is RED after rotate
                 tmp->parent->color = BLACK;
                 // change grandparent to RED and utilize Right rotate
                 tmp->parent->parent->color = RED;
-                LeftRotation(tmp->parent->parent);
+                RBTLeftRotation(tmp->parent->parent);
             }
         }
     }
@@ -150,7 +150,7 @@ void Red_Black_Tree::FixInsertion(Node *p_Node)
     // USE CASE 2: TBD
     T->color = BLACK;
 }
-void Red_Black_Tree::Insertion(Node *p_Node)
+void Red_Black_Tree::RBTInsertion(Node *p_Node)
 {
     Node *tmp = T;
     Node *tmoNil = Nil;
@@ -159,7 +159,7 @@ void Red_Black_Tree::Insertion(Node *p_Node)
         // back up node to use as parent of new node
         tmoNil = tmp;
         // New node is in right side
-        if (p_Node->key > tmp->key)
+        if (p_Node->rbt_currentTimeVirtual > tmp->rbt_currentTimeVirtual)
         {
             tmp = tmp->right;
         }
@@ -173,7 +173,7 @@ void Red_Black_Tree::Insertion(Node *p_Node)
     {
         T = p_Node;
     }
-    else if (tmoNil->key > p_Node->key)
+    else if (tmoNil->rbt_currentTimeVirtual > p_Node->rbt_currentTimeVirtual)
     {
         tmoNil->left = p_Node;
     }
@@ -188,10 +188,10 @@ void Red_Black_Tree::Insertion(Node *p_Node)
     p_Node->right = Nil;
 
     // Fix violations when adding new node
-    FixInsertion(p_Node);
+    RBTFixInsertion(p_Node);
 }
 
-void Red_Black_Tree::Transplant(Node *p_Node_u, Node *p_Node_v)
+void Red_Black_Tree::RBTTransplant(Node *p_Node_u, Node *p_Node_v)
 {
     // Replace node u by no v
     // left and right child of v are not update
@@ -212,7 +212,13 @@ void Red_Black_Tree::Transplant(Node *p_Node_u, Node *p_Node_v)
     p_Node_v->parent = p_Node_u->parent;
 }
 
-void Red_Black_Tree::Deletion(Node p_Node)
+void Red_Black_Tree::RBTDeletion(Node *p_Node)
 {
     // TBD
+}
+
+Node *Red_Black_Tree::RBTReturnMostLeftNode()
+{
+    Node *rbt_mostLeftNodeInTree;
+    return rbt_mostLeftNodeInTree;
 }

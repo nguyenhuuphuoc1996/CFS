@@ -10,7 +10,9 @@ enum COLOR
 
 struct Node
 {
-    int key;
+    int rbt_currentTimeVirtual;
+    uint64_t rbt_remainTimeVirtual;
+    uint64_t rbt_task_number;
     COLOR color;
     Node *left;
     Node *right;
@@ -22,18 +24,19 @@ class Red_Black_Tree
 public:
     Red_Black_Tree();
     ~Red_Black_Tree();
-    void Insertion(Node *p_Node);
-    void Deletion(Node p_Node);
-    void RBPrintNode(Node *p_Node);
-    Node *rootIs();
+    void RBTInsertion(Node *p_Node);
+    void RBTDeletion(Node *p_Node);
+    void RBTRBPrintNode(Node *p_Node);
+    Node *RBTReturnMostLeftNode();
+    Node *RBTrootIs();
 
 private:
-    void LeftRotation(Node *p_Node);
-    void RightRotation(Node *p_Node);
-    void FixInsertion(Node *p_Node);
-    void Transplant(Node *p_Node_u, Node *p_Node_v);
+    void RBTLeftRotation(Node *p_Node);
+    void RBTRightRotation(Node *p_Node);
+    void RBTFixInsertion(Node *p_Node);
+    void RBTTransplant(Node *p_Node_u, Node *p_Node_v);
 
-private:
+public:
     Node *T;
     Node *root;
     Node *Nil;
