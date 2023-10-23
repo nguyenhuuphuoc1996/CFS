@@ -8,23 +8,26 @@ CFSAlgorithm::~CFSAlgorithm()
 {
 }
 
-void CFSAlgorithm::CFSCreateProcessTree(int array[], int p_length)
+void CFSAlgorithm::CFSCreateProcessTree(uint64_t array[], uint64_t p_length)
 {
     for (int k = 0; k < p_length; k++)
     {
         Node *cfs_TaskNode = new Node();
         cfs_TaskNode->rbt_currentTimeVirtual = array[k];
+        cfs_TaskNode->rbt_remainTimeVirtual = array[k];
+        cfs_TaskNode->rbt_task_number = k + 1;
         RBTInsertion(cfs_TaskNode);
     }
+    cfs_time_quantum_per_task = (uint64_t)STUB_TIME_QUANTUM / p_length;
 }
 
 void CFSAlgorithm::CFSTaskProcessing()
 {
     uint64_t timeStub = cfs_time_quantum_per_task;
     // Check if process tree is empty, non-task, or has any process
-    while (root != Nil)
+    while (T != Nil)
     {
-        std::cout << "Time quantum " << timeStub << std::endl;
+        std::cout << "Time quantum " << timeStub;
         // CFS Algorithm
         // Return most left node
         //
@@ -32,18 +35,24 @@ void CFSAlgorithm::CFSTaskProcessing()
         //
         Node *cfs_mostLefTask = RBTReturnMostLeftNode();
 
-        std::cout << "Process of task number " << cfs_mostLefTask->rbt_task_number << " at time quantum " << cfs_mostLefTask->rbt_currentTimeVirtual << std::endl;
+        std::cout << " Process of task number " << cfs_mostLefTask->rbt_task_number << " at time quantum " << cfs_mostLefTask->rbt_remainTimeVirtual << std::endl;
 
+        // Remain virtualtime after a divided of quantum time
+        //
+        //
+        //
         cfs_mostLefTask->rbt_remainTimeVirtual = cfs_mostLefTask->rbt_remainTimeVirtual - cfs_time_quantum_per_task;
 
         // Check if task finishes at current timequantum
         //
         //
         //
+        // Remove that task from process tree
+        RBTDeletion(cfs_mostLefTask);
         if (cfs_mostLefTask->rbt_remainTimeVirtual <= 0)
         {
-            // Remove that task from process tree
-            RBTDeletion(cfs_mostLefTask);
+            // Task has finished
+            delete cfs_mostLefTask;
         }
         else
         {

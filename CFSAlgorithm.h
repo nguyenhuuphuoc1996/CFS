@@ -22,7 +22,7 @@ public:
     CFSAlgorithm();
     ~CFSAlgorithm();
 
-    void CFSCreateProcessTree(int p_array[], int p_length);
+    void CFSCreateProcessTree(uint64_t p_array[], uint64_t p_length);
     void CFSTaskProcessing();
 };
 
