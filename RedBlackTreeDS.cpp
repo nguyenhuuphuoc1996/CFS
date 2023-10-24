@@ -63,6 +63,7 @@ void Red_Black_Tree::RBTRightRotation(Node *p_Node)
     {
         y->right->parent = p_Node;
     }
+    y->parent = p_Node->parent;
 
     if (p_Node->parent == Nil)
     {
@@ -70,79 +71,78 @@ void Red_Black_Tree::RBTRightRotation(Node *p_Node)
     }
     else if (p_Node == p_Node->parent->left)
     {
-        p_Node->parent->right = y;
+        p_Node->parent->left = y;
     }
     else
     {
-        p_Node->parent->left = y;
+        p_Node->parent->right = y;
     }
-    y->parent = p_Node->parent;
+
     y->right = p_Node;
     p_Node->parent = y;
 }
-void Red_Black_Tree::RBTFixInsertion(Node *p_Node)
+void Red_Black_Tree::RBTFixInsertion(Node *p_Node_z)
 {
-    Node *tmp = p_Node;
     // prove that only the case of z and z.p are RED is violate in this case
-    while (tmp->parent->color == RED)
+    while (p_Node_z->parent->color == RED)
     {
-        if (tmp->parent == tmp->parent->parent->left)
+        if (p_Node_z->parent == p_Node_z->parent->parent->left)
         {
             // examinate z's uncle
-            Node *y = tmp->parent->parent->right;
+            Node *y = p_Node_z->parent->parent->right;
             if (y->color == RED)
             {
                 // Downstream color level of both parent and uncle
                 y->color = BLACK;
-                tmp->parent->color = BLACK;
+                p_Node_z->parent->color = BLACK;
                 // change colour of grandfather to maintain property number 5
-                tmp->parent->parent->color = RED;
+                p_Node_z->parent->parent->color = RED;
                 // move that pointer to current grandfather and check whether violate or not
-                tmp = tmp->parent->parent;
+                p_Node_z = p_Node_z->parent->parent;
             }
             else
             {
                 // because uncle and parent are different colour => cannot downstream colour level
-                if (tmp == tmp->parent->right)
+                if (p_Node_z == p_Node_z->parent->right)
                 {
-                    tmp = tmp->parent;
+                    p_Node_z = p_Node_z->parent;
                     // Rotate two RED node => do not affect to any properties
-                    RBTLeftRotation(tmp);
+                    RBTLeftRotation(p_Node_z);
                 }
                 // change current node to BLACK as its chile is RED after rotate
-                tmp->parent->color = BLACK;
+                p_Node_z->parent->color = BLACK;
                 // change grandparent to RED and utilize Right rotate
-                tmp->parent->parent->color = RED;
-                RBTRightRotation(tmp->parent->parent);
+                p_Node_z->parent->parent->color = RED;
+                RBTRightRotation(p_Node_z->parent->parent);
             }
         }
         else
         {
             // examinate z's uncle
-            Node *y = tmp->parent->parent->left;
+            Node *y = p_Node_z->parent->parent->left;
             if (y->color == RED)
             {
                 // Downstream color level
                 y->color = BLACK;
-                tmp->parent->color = BLACK;
+                p_Node_z->parent->color = BLACK;
                 // change colour of grandfather to maintain property number 5
-                tmp->parent->parent->color = RED;
+                p_Node_z->parent->parent->color = RED;
                 // move that pointer to current grandfather and check whether violate or not
-                tmp = tmp->parent->parent;
+                p_Node_z = p_Node_z->parent->parent;
             }
             else
             {
-                if (tmp == tmp->parent->left)
+                if (p_Node_z == p_Node_z->parent->left)
                 {
-                    tmp = tmp->parent;
+                    p_Node_z = p_Node_z->parent;
                     // Rotate two RED node => do not affect to any properties
-                    RBTRightRotation(tmp);
+                    RBTRightRotation(p_Node_z);
                 }
                 // change current node to BLACK as its chile is RED after rotate
-                tmp->parent->color = BLACK;
+                p_Node_z->parent->color = BLACK;
                 // change grandparent to RED and utilize Right rotate
-                tmp->parent->parent->color = RED;
-                RBTLeftRotation(tmp->parent->parent);
+                p_Node_z->parent->parent->color = RED;
+                RBTLeftRotation(p_Node_z->parent->parent);
             }
         }
     }
@@ -152,37 +152,37 @@ void Red_Black_Tree::RBTFixInsertion(Node *p_Node)
 }
 void Red_Black_Tree::RBTInsertion(Node *p_Node)
 {
-    Node *tmp = T;
-    Node *tmoNil = Nil;
-    while (tmp != Nil)
+    Node *rbt_x = T;
+    Node *rbt_y = Nil;
+    while (rbt_x != Nil)
     {
         // back up node to use as parent of new node
-        tmoNil = tmp;
+        rbt_y = rbt_x;
         // New node is in right side
-        if (p_Node->rbt_currentTimeVirtual > tmp->rbt_currentTimeVirtual)
+        if (p_Node->rbt_currentTimeVirtual < rbt_x->rbt_currentTimeVirtual)
         {
-            tmp = tmp->right;
+            rbt_x = rbt_x->left;
         }
         // New node is in left side
         else
         {
-            tmp = tmp->left;
+            rbt_x = rbt_x->right;
         }
     }
-    if (tmoNil == Nil)
+    p_Node->parent = rbt_y;
+    if (rbt_y == Nil)
     {
         T = p_Node;
     }
-    else if (tmoNil->rbt_currentTimeVirtual > p_Node->rbt_currentTimeVirtual)
+    else if (p_Node->rbt_currentTimeVirtual < rbt_y->rbt_currentTimeVirtual)
     {
-        tmoNil->left = p_Node;
+        rbt_y->left = p_Node;
     }
     else
     {
-        tmoNil->right = p_Node;
+        rbt_y->right = p_Node;
     }
     // add new node in trees
-    p_Node->parent = tmoNil;
     p_Node->color = RED;
     p_Node->left = Nil;
     p_Node->right = Nil;
@@ -199,13 +199,13 @@ void Red_Black_Tree::RBTTransplant(Node *p_Node_u, Node *p_Node_v)
     {
         T = p_Node_v;
     }
-    else if (p_Node_u == p_Node_u->parent->right)
+    else if (p_Node_u == p_Node_u->parent->left)
     {
-        p_Node_u->parent->right = p_Node_v;
+        p_Node_u->parent->left = p_Node_v;
     }
     else
     {
-        p_Node_u->parent->left = p_Node_v;
+        p_Node_u->parent->right = p_Node_v;
     }
 
     // Event Nil node can have a parent in RBT

@@ -34,7 +34,7 @@ public:
 private:
     void RBTLeftRotation(Node *p_Node);
     void RBTRightRotation(Node *p_Node);
-    void RBTFixInsertion(Node *p_Node);
+    void RBTFixInsertion(Node *p_Node_z);
     void RBTFixDeletion(Node *p_Node_x);
     void RBTTransplant(Node *p_Node_u, Node *p_Node_v);
     Node *RBTTreeMinimum(Node *p_Node);

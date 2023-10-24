@@ -5,6 +5,7 @@
 #include "RedBlackTreeDS.h"
 
 #define STUB_TIME_QUANTUM 4 // 1 time quantum = 4ms
+#define MINIMUM_TIME_QUANTUM 1
 
 struct cfs_Task
 {

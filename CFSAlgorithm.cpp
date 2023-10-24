@@ -19,6 +19,7 @@ void CFSAlgorithm::CFSCreateProcessTree(uint64_t array[], uint64_t p_length)
         RBTInsertion(cfs_TaskNode);
     }
     cfs_time_quantum_per_task = (uint64_t)STUB_TIME_QUANTUM / p_length;
+    cfs_time_quantum_per_task = (cfs_time_quantum_per_task > 0) ? cfs_time_quantum_per_task : MINIMUM_TIME_QUANTUM;
 }
 
 void CFSAlgorithm::CFSTaskProcessing()
@@ -35,7 +36,7 @@ void CFSAlgorithm::CFSTaskProcessing()
         //
         Node *cfs_mostLefTask = RBTReturnMostLeftNode();
 
-        std::cout << " Process of task number " << cfs_mostLefTask->rbt_task_number << " at time quantum " << cfs_mostLefTask->rbt_remainTimeVirtual << std::endl;
+        std::cout << " --- Process of task number " << cfs_mostLefTask->rbt_task_number << " --- with current Virtual Time " << cfs_mostLefTask->rbt_remainTimeVirtual << std::endl;
 
         // Remain virtualtime after a divided of quantum time
         //
@@ -57,9 +58,20 @@ void CFSAlgorithm::CFSTaskProcessing()
         else
         {
             // Insert task with remaining virtualtime as new Node
-            cfs_mostLefTask->rbt_currentTimeVirtual = cfs_mostLefTask->rbt_currentTimeVirtual + cfs_time_quantum_per_task;
-            RBTInsertion(cfs_mostLefTask);
+            //
+            //
+            //
+            Node *cfs_newNode = new Node();
+            cfs_newNode->rbt_currentTimeVirtual = cfs_mostLefTask->rbt_currentTimeVirtual + cfs_time_quantum_per_task;
+            cfs_newNode->rbt_remainTimeVirtual = cfs_mostLefTask->rbt_remainTimeVirtual;
+            cfs_newNode->rbt_task_number = cfs_mostLefTask->rbt_task_number;
+            // Insert new node
+            //
+            //
+            RBTInsertion(cfs_newNode);
         }
-        timeStub = (timeStub < STUB_TIME_QUANTUM) ? timeStub + cfs_time_quantum_per_task : STUB_TIME_QUANTUM;
+
+        // Next quantum time
+        timeStub = (timeStub < STUB_TIME_QUANTUM) ? timeStub + cfs_time_quantum_per_task : cfs_time_quantum_per_task;
     }
 }
