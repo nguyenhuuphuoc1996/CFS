@@ -3,15 +3,10 @@
 #include <stdio.h>
 #include <cstdint>
 #include "RedBlackTreeDS.h"
+#include "Structure.h"
 
 #define STUB_TIME_QUANTUM 4 // 1 time quantum = 4ms
 #define MINIMUM_TIME_QUANTUM 1
-
-struct cfs_Task
-{
-    Node *cfs_TaskRepresentNode;
-    uint64_t cfs_task_timevirtual;
-};
 
 class CFSAlgorithm : public Red_Black_Tree
 {
@@ -23,8 +18,8 @@ public:
     CFSAlgorithm();
     ~CFSAlgorithm();
 
-    void CFSCreateProcessTree(uint64_t p_array[], uint64_t p_length);
-    void CFSTaskProcessing();
+    void CFSCreateProcessTree(uint64_t p_virtualTime, uint64_t p_task_number);
+    void CFSTaskProcessing(gtask p_taskTable[], uint64_t p_length);
 };
 
 #endif
